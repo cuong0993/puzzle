@@ -1,0 +1,39 @@
+name: "Build"
+on: push
+
+env:
+  GODOT_VERSION: 3.2.3
+  EXPORT_NAME: puzzle
+
+jobs:
+  export-android:
+    name: Android Export
+    runs-on: ubuntu-latest
+    container:
+      image: cuong0993/godot-mono:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Setup
+        env:
+          EXPORT_PRESETS: ${{ secrets.EXPORT_PRESETS }}
+          RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+        run: |
+          mkdir -v -p ~/.config/godot/
+          mv /root/.config/godot/editor_settings-3.tres ~/.config/godot/editor_settings-3.tres
+          echo "$EXPORT_PRESETS" > godot/export_presets.cfg
+          echo "$RELEASE_KEYSTORE" | base64 -d > godot/release.keystore
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/templates/${GODOT_VERSION}.stable.mono
+      - name: Android Build
+        run: |
+          cd godot
+          mkdir -v -p build
+          godot -v --export "Android" build/$EXPORT_NAME.apk
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: android
+          path: godot/build        
