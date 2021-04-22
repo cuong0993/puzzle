@@ -2,7 +2,7 @@ name: "Build"
 on: push
 
 env:
-  GODOT_VERSION: 3.2.3
+  GODOT_VERSION: 3.3
   EXPORT_NAME: puzzle
 
 jobs:
@@ -25,11 +25,13 @@ jobs:
           mv /root/.config/godot/editor_settings-3.tres ~/.config/godot/editor_settings-3.tres
           echo "$EXPORT_PRESETS" > godot/export_presets.cfg
           echo "$RELEASE_KEYSTORE" | base64 -d > godot/release.keystore
+          echo "$RELEASE_KEYSTORE" | base64 -d > godot/android/build/release.keystore
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/templates/${GODOT_VERSION}.stable.mono
       - name: Android Build
         run: |
           cd godot
+          java -version
           mkdir -v -p build
           godot -v --export "Android" build/$EXPORT_NAME.apk
       - name: Upload Artifact
