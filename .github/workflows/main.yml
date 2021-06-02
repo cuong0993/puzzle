@@ -2,7 +2,7 @@ name: "Build"
 on: push
 
 env:
-  GODOT_VERSION: 3.3.1
+  GODOT_VERSION: 3.3.2
   EXPORT_NAME: puzzle
 
 jobs:
