@@ -2,7 +2,6 @@ name: "Build"
 on: push
 
 env:
-  GODOT_VERSION: 3.3.2
   EXPORT_NAME: puzzle
 
 jobs:
@@ -27,7 +26,6 @@ jobs:
           echo "$RELEASE_KEYSTORE" | base64 -d > godot/release.keystore
           echo "$RELEASE_KEYSTORE" | base64 -d > godot/android/build/release.keystore
           mkdir -v -p ~/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/templates/${GODOT_VERSION}.stable.mono
       - name: Android Build
         run: |
           cd godot
